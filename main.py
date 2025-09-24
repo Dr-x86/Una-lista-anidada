@@ -3,12 +3,12 @@ import random
 import os
 from time import sleep
 from dotenv import load_dotenv
-from ia import solicitar_texto
+# from ia import solicitar_texto
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
 
-lista_subs = ["animebutts","rule34","anihentair34", "jerkbudsHentai","animefeet"]
+lista_subs = ["animebutts","rule34","anihentair34","jerkbudsHentai","rule_34_for_all","animefeet","ElizabethLiones","Rule_34","CartoonPorn","SFW_Rule43","hentai","masteruwuoficial"]
 
 def solicitar_url():
     subreddit = random.choice(lista_subs)
@@ -33,10 +33,10 @@ def verificar_url(url):
             return False    
     return True
 
-def subir_contenido(url, caption):
+def subir_contenido(url, caption=''):
     
-    if (not url or not caption):
-        print('Los valores url o caption son invalidos ... ')
+    if (not url):
+        print(f'Los valores url son invalidos ...  {url}')
         return
     
     response = requests.get(url) # Obtener la imagen
@@ -60,18 +60,36 @@ def subir_contenido(url, caption):
         print(f'Error. Excepcion: {e}')
 
 
-while True:
-    url = solicitar_url()
-    print(f"URL: {url}")
-    if verificar_url(url): # True si la url es nueva.
-        
-        texto = solicitar_texto()
-        print(f"TEXTO: {texto}")
-        
-        subir_contenido(url,texto)
-        
-        registrar_url(url)
-        print("Url registrada, fin del programa")
-        break
+def longitud_urls():
+    with open("urls.txt", 'r') as f:
+        urls = f.readlines()
+        return len(urls)
+
+
+def limpiar_urls():
+    open('urls.txt', 'w').close()
+
+if __name__ == "__main__":
     
-    sleep(10)
+    longitud = longitud_urls() # Limpieza para no aumentar demasiado la longitud de la lista
+    if longitud >= 250:
+        limpiar_urls()
+
+    while True:
+        url = solicitar_url()
+        print(f"URL: {url}")
+        if verificar_url(url): # True si la url es nueva.
+        
+            # texto = solicitar_texto()
+            # print(f"TEXTO: {texto}")   
+            
+            # De momento no habra comentarios, ya que parece ser muy repetitivo.
+            # Una idea seria hacer un polling momentanio, aunque sea para responder un comentario aleatorio.
+        
+            subir_contenido(url)
+        
+            registrar_url(url)
+            print("Url registrada, fin del programa")
+            break
+        
+        sleep(3)
