@@ -66,6 +66,9 @@ def subir_contenido(url, caption=''):
         
         if r.status_code == 200:
             print('Correcto, El contenido fue subido con exito')
+        else:
+            print(f'Error codigo {r.status_code}, Detalles: {r.text}')
+        
         
     except Excepcion as e:
         print(f'Error. Excepcion: {e}')
