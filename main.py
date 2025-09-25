@@ -8,17 +8,28 @@ from dotenv import load_dotenv
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
 
-lista_subs = ["animebutts","rule34","anihentair34","jerkbudsHentai","rule_34_for_all","animefeet","ElizabethLiones","Rule_34","CartoonPorn","SFW_Rule43","hentai","masteruwuoficial"]
+lista_subs = ["animebutts","rule34","anihentair34","jerkbudsHentai","rule_34_for_all","animefeet","ElizabethLiones","Rule_34","CartoonPorn","SFW_Rule34","hentai","masteruwuoficial"]
 
 def solicitar_url():
     subreddit = random.choice(lista_subs)
-    
+    print(f"Subreddit elegido: {subreddit}")
     url = f"https://meme-api.com/gimme/{subreddit}"
     try:
         respuesta = requests.get(url)
+        respuesta.raise_for_status()
+        
         return respuesta.json().get("url")
+    
+    except requests.exceptions.HTTPError as err:
+        print(f"\nExcepcion err: {err}\nContenido: { respuesta.json()["message"] }\n")
+        return None
+    
+    except ReferenceError as r:
+        print(f"\nExcepcion err: {r}\nContenido: { respuesta.json()["message"] }\n")
+        return None
+    
     except Exception as e:
-        print(f"Excepcion: {e}")
+        print(f"\nExcepcion err: {e}\nContenido: { respuesta.json()["message"] }\n")
         return None
 
 def registrar_url(url):
@@ -76,8 +87,14 @@ if __name__ == "__main__":
         limpiar_urls()
 
     while True:
+        
         url = solicitar_url()
         print(f"URL: {url}")
+        
+        if url is None:
+            print("ERROR - NONE")
+            break
+            
         if verificar_url(url): # True si la url es nueva.
         
             # texto = solicitar_texto()
