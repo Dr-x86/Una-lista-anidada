@@ -8,29 +8,14 @@ from dotenv import load_dotenv
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
 
-lista_subs = ["animebutts","rule34","anihentair34","jerkbudsHentai","rule_34_for_all","animefeet","ElizabethLiones","Rule_34","CartoonPorn","SFW_Rule34","hentai","masteruwuoficial"]
 
-def solicitar_url():
-    subreddit = random.choice(lista_subs)
-    print(f"Subreddit elegido: {subreddit}")
-    url = f"https://meme-api.com/gimme/{subreddit}"
-    try:
-        respuesta = requests.get(url)
-        respuesta.raise_for_status()
-        
-        return respuesta.json().get("url")
-    
-    except requests.exceptions.HTTPError as err:
-        print(f"\nExcepcion err: {err}\nContenido: { respuesta.json()['message'] }\n")
-        return None
-    
-    except ReferenceError as r:
-        print(f"\nExcepcion err: {r}\nContenido: { respuesta.json()['message'] }\n")
-        return None
-    
-    except Exception as e:
-        print(f"\nExcepcion err: {e}\nContenido: { respuesta.json()['message'] }\n")
-        return None
+"""
+"animebutts","rule34","anihentair34","jerkbudsHentai","rule_34_for_all",
+"animefeet","ElizabethLiones","Rule_34","CartoonPorn","SFW_Rule34","hentai",
+"""
+
+
+lista_subs = ["hentai","masteruwuoficial","spicyteto","HatsuneMiku_Hentai","hatsunemikuhentaiv3","vocaloidhentai"]
 
 def registrar_url(url):
     with open("urls.txt", 'a') as f:
@@ -44,13 +29,41 @@ def verificar_url(url):
             return False    
     return True
 
-def subir_contenido(url, caption=''):
+
+def solicitar_url():
+    subreddit = random.choice(lista_subs)
+    print(f"Subreddit elegido: {subreddit}")
+    url = f"https://meme-api.com/gimme/{subreddit}"
+    try:
+        respuesta = requests.get(url)
+        respuesta.raise_for_status()
+        
+        data = {
+            "url": respuesta.json().get("url"),
+            "title": respuesta.json().get("title")
+        }
+        
+        return data
     
+    except requests.exceptions.HTTPError as err:
+        print(f"\nExcepcion err: {err}\nContenido: { respuesta.json()['message'] }\n")
+        return None
+    
+    except ReferenceError as r:
+        print(f"\nExcepcion err: {r}\nContenido: { respuesta.json()['message'] }\n")
+        return None
+    
+    except Exception as e:
+        print(f"\nExcepcion err: {e}\nContenido: { respuesta.json()['message'] }\n")
+        return None
+
+
+def subir_contenido(url, caption=''):    
     if (not url):
         print(f'Los valores url son invalidos ...  {url}')
         return
     
-    response = requests.get(url) # Obtener la imagen
+    response = requests.get(url) # Obtener la imagen    
     url_api = f"https://api.telegram.org/bot{TOKEN}/sendPhoto"
     
     data = {
@@ -66,50 +79,60 @@ def subir_contenido(url, caption=''):
         
         if r.status_code == 200:
             print('Correcto, El contenido fue subido con exito')
+            return True
+
         else:
             print(f'Error codigo {r.status_code}, Detalles: {r.text}')
         
-        
     except Excepcion as e:
         print(f'Error. Excepcion: {e}')
-
-
-def longitud_urls():
+        
+    return False
+    
+    
+def limpiar_urls(limite):
     with open("urls.txt", 'r') as f:
         urls = f.readlines()
-        return len(urls)
+      
+    if len(urls) >= limite:
+        open('urls.txt', 'w').close()
+        print("Limpieza ... ")
+        return
+
+def obtener_data(max = 100):    
+    intentos = 0
+    while intentos < max: 
+        data = solicitar_url()
+        
+        if data == None:
+            print("Error - La data no puede ser un valor nulo")
+            intentos += 1
+            continue
+            
+        if verificar_url(data.get('url')):
+            return data
+        
+        intentos+=1
 
 
-def limpiar_urls():
-    open('urls.txt', 'w').close()
+def iterable(maximo = 10):    
+    limpiar_urls(256)
+    
+    i = 0
+    while i <= maximo: 
+        data = obtener_data()
+        
+        url = data.get("url")
+        title = data.get("title")
+        
+        if subir_contenido(url, title):
+            registrar_url(url)
+            break
+        
+        i=+1
+    
 
 if __name__ == "__main__":
     
-    longitud = longitud_urls() # Limpieza para no aumentar demasiado la longitud de la lista
-    if longitud >= 250:
-        limpiar_urls()
-
-    while True:
-        
-        url = solicitar_url()
-        print(f"URL: {url}")
-        
-        if url is None:
-            print("ERROR - NONE")
-            break
-            
-        if verificar_url(url): # True si la url es nueva.
-        
-            # texto = solicitar_texto()
-            # print(f"TEXTO: {texto}")   
-            
-            # De momento no habra comentarios, ya que parece ser muy repetitivo.
-            # Una idea seria hacer un polling momentanio, aunque sea para responder un comentario aleatorio.
-        
-            subir_contenido(url)
-        
-            registrar_url(url)
-            print("Url registrada, fin del programa")
-            break
-        
-        sleep(3)
+    iterable()
+    
