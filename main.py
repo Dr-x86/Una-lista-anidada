@@ -28,7 +28,14 @@ def verificar_url(url):
             print("Ya existe la url")
             return False    
     return True
-
+    
+def cortar_string(mensaje):
+    
+    cree = ['(oc)', 'my', 'by me', 'mine', '[oc]', 'i made', 'i did', 'i make']
+    for x in cree:
+        mensaje = mensaje.replace(x,'')
+    
+    return mensaje
 
 def solicitar_url():
     subreddit = random.choice(lista_subs)
@@ -92,7 +99,7 @@ def subir_contenido(url, caption=''):
     
 def limpiar_urls(limite):
     with open("urls.txt", 'r') as f:
-        urls = f.readlines()
+        urls = f.readlines()        
       
     if len(urls) >= limite:
         open('urls.txt', 'w').close()
@@ -125,6 +132,8 @@ def iterable(maximo = 10):
         url = data.get("url")
         title = data.get("title")
         
+        title = cortar_string(title)
+        
         if subir_contenido(url, title):
             registrar_url(url)
             break
@@ -134,5 +143,5 @@ def iterable(maximo = 10):
 
 if __name__ == "__main__":
     
-    iterable()
+    # iterable()
     
