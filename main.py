@@ -15,7 +15,7 @@ TOKEN = os.getenv("TOKEN")
 """
 
 
-lista_subs = ["hentai","masteruwuoficial","spicyteto","HatsuneMiku_Hentai","hatsunemikuhentaiv3","vocaloidhentai"]
+lista_subs = ["hentai","masteruwuoficial","spicyteto","HatsuneMiku_Hentai","hatsunemikuhentaiv3","vocaloidhentai","KasaneTetoRule34"]
 
 def registrar_url(url):
     with open("urls.txt", 'a') as f:
