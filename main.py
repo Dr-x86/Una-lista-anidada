@@ -46,15 +46,15 @@ def solicitar_url():
         return data
     
     except requests.exceptions.HTTPError as err:
-        print(f"\nExcepcion err: {err}\nContenido: { respuesta.json()['message'] }\n")
+        print(f"\nExcepcion err: {err}\nContenido: { respuesta.json() }\n")
         return None
     
     except ReferenceError as r:
-        print(f"\nExcepcion err: {r}\nContenido: { respuesta.json()['message'] }\n")
+        print(f"\nExcepcion err: {r}\nContenido: { respuesta.json() }\n")
         return None
     
     except Exception as e:
-        print(f"\nExcepcion err: {e}\nContenido: { respuesta.json()['message'] }\n")
+        print(f"\nExcepcion err: {e}\nContenido: { respuesta.json() }\n")
         return None
 
 
