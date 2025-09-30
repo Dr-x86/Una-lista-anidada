@@ -122,7 +122,7 @@ def obtener_data(max = 100):
         intentos+=1
 
 
-def iterable(maximo = 10):    
+def iterable(maximo = 100):    
     limpiar_urls(256)
     
     i = 0
@@ -137,7 +137,10 @@ def iterable(maximo = 10):
         if subir_contenido(url, title):
             registrar_url(url)
             break
-        i=+1
+        
+        i+=1
+        
+    print("\n ========== No se ha subido nada en este momento ============== \n")
 
 if __name__ == "__main__":
     
