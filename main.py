@@ -8,14 +8,15 @@ from dotenv import load_dotenv
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
 
-
 """
 "animebutts","rule34","anihentair34","jerkbudsHentai","rule_34_for_all",
 "animefeet","ElizabethLiones","Rule_34","CartoonPorn","SFW_Rule34","hentai",
 """
 
 
-lista_subs = ["hentai","masteruwuoficial","spicyteto","HatsuneMiku_Hentai","hatsunemikuhentaiv3","vocaloidhentai"]
+lista_subs = ["hentai","masteruwuoficial","spicyteto","HatsuneMiku_Hentai","hatsunemikuhentaiv3","vocaloidhentai",
+    "animebutts","rule34","anihentair34","jerkbudsHentai","rule_34_for_all",
+    "animefeet","ElizabethLiones","Rule_34","CartoonPorn","SFW_Rule34","hentai"]
 
 def registrar_url(url):
     with open("urls.txt", 'a') as f:
@@ -70,12 +71,14 @@ def subir_contenido(url, caption=''):
         print(f'Los valores url son invalidos ...  {url}')
         return
     
-    response = requests.get(url) # Obtener la imagen    
+    response = requests.get(url) # Obtener la imagen
+    
+    
     url_api = f"https://api.telegram.org/bot{TOKEN}/sendPhoto"
     
     data = {
         "chat_id" : "@NsfwAnimeY",
-        "caption": caption
+        "caption": caption,
     }
     files = {
         "photo": ("imagen.jpg", response.content)
@@ -136,11 +139,12 @@ def iterable(maximo = 100):
         
         if subir_contenido(url, title):
             registrar_url(url)
-            break
-        
+            exit(0)
+            
         i+=1
         
-    print("\n ========== No se ha subido nada en este momento ============== \n")
+    print("SI VES ESTO EL BOT NO SUBIO NADA ... ")
+
 
 if __name__ == "__main__":
     
